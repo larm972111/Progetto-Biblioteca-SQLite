@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+
+    <nav class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-3">
+            <span class="text-2xl">📚</span>
+            <span class="text-xl font-bold tracking-wider text-amber-400 uppercase">Online Library</span>
+        </div>
+        <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
+            <a href="#" class="hover:text-amber-400 transition">HOME</a>
+            <a href="#" class="hover:text-amber-400 transition">MY LOANS</a>
+            <a href="#" class="hover:text-amber-400 transition text-amber-400">CATALOG</a>
+            <a href="#" class="hover:text-amber-400 transition">ADMIN</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section class="bg-gray-800 rounded-xl shadow-2xl border border-gray-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4 flex items-center space-x-2">
+                <span class="text-xl">📖</span>
+                <h2 class="text-lg font-bold tracking-wide uppercase text-gray-900">Books Collection</h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-750 border-b border-gray-700 text-amber-400 text-xs uppercase tracking-wider">
+                            <th class="py-4 px-6">ID</th>
+                            <th class="py-4 px-6">Title</th>
+                            <th class="py-4 px-6">Author</th>
+                            <th class="py-4 px-6">Pages</th>
+                            <th class="py-4 px-6 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        {% for book in books %}
+                        <tr class="hover:bg-gray-700/50 transition">
+                            <td class="py-4 px-6 font-mono text-gray-400">{{ book.item_id }}</td>
+                            <td class="py-4 px-6 font-semibold text-white">{{ book.title }}</td>
+                            <td class="py-4 px-6 text-gray-300">{{ book.author }}</td>
+                            <td class="py-4 px-6 text-gray-300">{{ book.pagnum }} pages</td>
+                            <td class="py-4 px-6 text-center">
+                                {% if book.status.name == 'AVAILABLE' %}
+                                    <span class="px-3 py-1 text-xs font-bold uppercase rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Available</span>
+                                {% else %}
+                                    <span class="px-3 py-1 text-xs font-bold uppercase rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">Loaned</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-gray-500 italic">No books registered in the database yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <section class="bg-gray-800 rounded-xl shadow-2xl border border-gray-700 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex items-center space-x-2">
+                <span class="text-xl">🎬</span>
+                <h2 class="text-lg font-bold tracking-wide uppercase text-gray-900">DVDs Collection</h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-750 border-b border-gray-700 text-blue-400 text-xs uppercase tracking-wider">
+                            <th class="py-4 px-6">ID</th>
+                            <th class="py-4 px-6">Title</th>
+                            <th class="py-4 px-6">Director / Author</th>
+                            <th class="py-4 px-6">Duration</th>
+                            <th class="py-4 px-6 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        {% for dvd in dvds %}
+                        <tr class="hover:bg-gray-700/50 transition">
+                            <td class="py-4 px-6 font-mono text-gray-400">{{ dvd.item_id }}</td>
+                            <td class="py-4 px-6 font-semibold text-white">{{ dvd.title }}</td>
+                            <td class="py-4 px-6 text-gray-300">{{ dvd.author }}</td>
+                            <td class="py-4 px-6 text-gray-300">{{ dvd.duration }} min</td>
+                            <td class="py-4 px-6 text-center">
+                                {% if dvd.status.name == 'AVAILABLE' %}
+                                    <span class="px-3 py-1 text-xs font-bold uppercase rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Available</span>
+                                {% else %}
+                                    <span class="px-3 py-1 text-xs font-bold uppercase rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30">Loaned</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-gray-500 italic">No DVDs registered in the database yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
