@@ -15,7 +15,7 @@ class LibraryItem(db.Model):
     item_id: Mapped[str] = mapped_column(primary_key=True)
     title: Mapped[str]
     author: Mapped[str]
-    status: Mapped[ItemStatus]= mapped_column(s(ItemStatus), default=ItemStatus.AVAILABLE)
+    status: Mapped[ItemStatus]= mapped_column(SQLEnum(ItemStatus), default=ItemStatus.AVAILABLE)
 
     def __str__(self):
         return f"Title: {self.title} Author: {self.author} Id: {self.item_id} Status: {self.status}"
@@ -45,7 +45,7 @@ class Book(LibraryItem):
     __tablename__ = "books"
     isbn: Mapped[str]
     pagnum: Mapped[int]
-    user_id = Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'), nullable=True)
+    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
     
         
         
@@ -53,7 +53,7 @@ class Dvd(LibraryItem):
     
     __tablename__ = "dvds"
     duration: Mapped[int]
-    user_id = Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'), nullable=True)
+    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
     
     
 class User(db.Model):
