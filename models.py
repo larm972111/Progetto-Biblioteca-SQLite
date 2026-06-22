@@ -9,13 +9,18 @@ class ItemStatus(Enum):
     UNAVAILABLE = 3
 
 class LibraryItem(db.Model):
-    
-    __abstract__ = True
-    
+    __tablename__ = "libraryitem"
     item_id: Mapped[str] = mapped_column(primary_key=True)
+    type: Mapped[str]
     title: Mapped[str]
     author: Mapped[str]
     status: Mapped[ItemStatus]= mapped_column(SQLEnum(ItemStatus), default=ItemStatus.AVAILABLE)
+
+    __mapper_args__ = {
+        "polymorphic_on": "type",
+        "polymorphic_identity": "libraryitem",
+    }
+
 
     def __str__(self):
         return f"Title: {self.title} Author: {self.author} Id: {self.item_id} Status: {self.status}"
@@ -41,24 +46,27 @@ class LibraryItem(db.Model):
 
 
 class Book(LibraryItem):
-    
-    __tablename__ = "books"
     isbn: Mapped[str]
     pagnum: Mapped[int]
     user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
+
+    __mapper_args__ = {
+        "polymorphic_identity": "book",
+    }
     
         
         
 class Dvd(LibraryItem):
-    
-    __tablename__ = "dvds"
     duration: Mapped[int]
     user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
+
+    __mapper_args__ = {
+        "polymorphic_identity": "dvd",
+    }
     
     
 class User(db.Model):
     __tablename__ = 'users'
-    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
