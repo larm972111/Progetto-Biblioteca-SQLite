@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Enum as SQLEnum
 from extension import db
@@ -10,8 +11,8 @@ class ItemStatus(Enum):
 
 class LibraryItem(db.Model):
     __tablename__ = "libraryitem"
-    item_id: Mapped[str] = mapped_column(primary_key=True)
-    type: Mapped[str]
+    item_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    type: Mapped[str]  
     title: Mapped[str]
     author: Mapped[str]
     status: Mapped[ItemStatus]= mapped_column(SQLEnum(ItemStatus), default=ItemStatus.AVAILABLE)

@@ -1,42 +1,49 @@
-from models import LibraryItem
+from models import LibraryItem, ItemStatus
+from extension import db
 
 class ItemNotFoundError(Exception): pass
 
 class LibraryManager:
-    def __init__(self):
-        self.catalog = []
-        
-    def __str__(self):
-        result = "Library Catalog: \n"
-        for item in self.catalog:
-            result += f"{item.title} of {item.author}\n"
-        return result
-        
         
     def add_item(self, new_item: LibraryItem):
-        for item in self.catalog:
-            if new_item.item_id == item.item_id:
-                raise ValueError(f"Error Duplicate id: {item.item_id}")        
-        self.catalog.append(new_item)
+        db.session.add(new_item)
+        db.session.commit()
         
-    def search_by_author(self, author: str) -> [LibraryItem]:
-        matches = []
-        for item in self.catalog:
-            if author == item.author:
-                matches.append(item)
-        return matches 
+    def search_by_author(self, author: str) -> list[LibraryItem]:
+        results = db.session.execute(db.select(LibraryItem).where(LibraryItem.author == author))
+        return results.scalars().all()
+
+    def remove_item(self, id_item: int) -> tuple[bool, str]:
+        item = db.session.get(LibraryItem, id_item)
+        if not item:
+            return False, "Elemento non trovato nel catalogo."
+        if item.status == ItemStatus.LOANED: 
+            return False, "Impossibile eliminare: l'elemento è attualmente in prestito."
+        try:
+            db.session.delete(item)
+            db.session.commit()
+            return True, f"'{item.title}' è stato rimosso con successo."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Errore interno durante l'eliminazione dal database. {e}"
         
-    def remove_item(self, id_item: str):
-        for item in self.catalog:
-            if id_item == item.item_id:
-                self.catalog.remove(item)
-                return
-        raise ItemNotFoundError(f"{id_item} not found in catalog")   
-        
-    def lend_item(self, item_id: str):
-        for item in self.catalog:
-            if item_id == item.item_id:
-                item.borrow_item()
-                return
-        raise ItemNotFoundError(f"Item id {item_id} not found")
-        
+    def lend_item(self, id_item: int) -> tuple[bool, str]:
+        item = db.session.get(LibraryItem, id_item)
+        if not item:
+            return False, "Elemento non trovato nel catalogo."
+        if item.status == ItemStatus.LOANED: 
+            return False, "Elemento già in prestito."
+        item.status = ItemStatus.LOANED
+        db.session.commit()
+        return True, f"'{item.title}' è stato prestato con successo."
+    
+    def return_item(self, id_item: int) -> tuple[bool, str]:
+        item = db.session.get(LibraryItem, id_item)
+        if not item:
+            return False, "Elemento non trovato nel catalogo."
+        if item.status != ItemStatus.LOANED:
+            return False, f"il {item.item_type} {item.title} non si trova attualmente in prestito percio non puo essere restituito"
+        item.status = ItemStatus.AVAILABLE
+        db.session.commit()
+        return True, f"'{item.title}' è stato restituito con successo."
+
