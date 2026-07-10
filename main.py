@@ -4,16 +4,16 @@ from models import Book, Dvd
 
 def popola_database():
     print("⏳ Cancellazione vecchio database e creazione nuove tabelle...")
-    db.drop_all()   # Cancello tutto così non ho problemi di ID duplicati se lo lancio più volte
+    db.drop_all()   # Cancello tutto così non ho problemi di record duplicati se lo lancio più volte
     db.create_all() # Ricreo le tabelle pulite
     
     print("📚 Creazione degli elementi di test...")
     
     libri = [
-        Book(title="Il Signore degli Anelli", author="J.R.R. Tolkien", isbn="978-8845292613"),
-        Book(title="1984", author="George Orwell", isbn="978-8824773539"),
-        Book(title="Il Nome della Rosa", author="Umberto Eco", isbn="978-8830104747"),
-        Book(title="Dune", author="Frank Herbert", isbn="978-8834739600")
+        Book(title="Il Signore degli Anelli", author="J.R.R. Tolkien", isbn="978-8845292613", pagnum=1200),
+        Book(title="1984", author="George Orwell", isbn="978-8824773539", pagnum=328),
+        Book(title="Il Nome della Rosa", author="Umberto Eco", isbn="978-8830104747", pagnum=620),
+        Book(title="Dune", author="Frank Herbert", isbn="978-8834739600", pagnum=700)
     ]
     
     dvds = [

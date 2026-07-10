@@ -16,6 +16,7 @@ class LibraryItem(db.Model):
     title: Mapped[str]
     author: Mapped[str]
     status: Mapped[ItemStatus]= mapped_column(SQLEnum(ItemStatus), default=ItemStatus.AVAILABLE)
+    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
 
     __mapper_args__ = {
         "polymorphic_on": "type",
@@ -49,7 +50,6 @@ class LibraryItem(db.Model):
 class Book(LibraryItem):
     isbn: Mapped[str]
     pagnum: Mapped[int]
-    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
 
     __mapper_args__ = {
         "polymorphic_identity": "book",
@@ -59,7 +59,6 @@ class Book(LibraryItem):
         
 class Dvd(LibraryItem):
     duration: Mapped[int]
-    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
 
     __mapper_args__ = {
         "polymorphic_identity": "dvd",

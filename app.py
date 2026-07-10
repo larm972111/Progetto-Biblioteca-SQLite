@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from models import Book, Dvd, ItemStatus
+from models import Book, Dvd
 from library import LibraryManager
 from extension import db
 
