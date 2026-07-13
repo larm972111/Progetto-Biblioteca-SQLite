@@ -33,23 +33,19 @@ class LibraryItem(db.Model):
         return f"Title: {self.title} Author: {self.author} Id: {self.item_id} Status: {self.status}"
         
     def __repr__(self):
-        return f"{self.item_type}(id='{self.item_id}', title='{self.title}')"
+        return f"{self.type.capitalize()}(id='{self.item_id}', title='{self.title}')"
         
     def borrow_item(self) -> str:
         if self.status == ItemStatus.AVAILABLE:
             self.status = ItemStatus.LOANED
-            return f"The {self.item_type} {self.title} has been checked out"
+            return f"The {self.type.capitalize()} {self.title} has been checked out"
         return f"Error: {self.title} has currently {self.status}"
         
     def return_item(self) -> str:
         if self.status == ItemStatus.LOANED:
             self.status = ItemStatus.AVAILABLE
-            return f"The {self.item_type} {self.title} now is again available"
+            return f"The {self.type.capitalize()} {self.title} now is again available"
         return f"Error: {self.title} has currently {self.status}"
-        
-    @property
-    def item_type(self) -> str:
-        return self.__class__.__name__
 
 
 class Book(LibraryItem):
