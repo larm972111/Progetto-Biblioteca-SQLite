@@ -9,6 +9,11 @@ class ItemStatus(Enum):
     AVAILABLE = 2
     UNAVAILABLE = 3
 
+class VideoResolution(Enum):
+    FOUR_K = "4K"
+    FHD = "FHD"
+    HD = "HD"
+
 class LibraryItem(db.Model):
     __tablename__ = "libraryitem"
     item_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -16,6 +21,7 @@ class LibraryItem(db.Model):
     title: Mapped[str]
     author: Mapped[str]
     status: Mapped[ItemStatus]= mapped_column(SQLEnum(ItemStatus), default=ItemStatus.AVAILABLE)
+    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
 
     __mapper_args__ = {
         "polymorphic_on": "type",
@@ -27,29 +33,26 @@ class LibraryItem(db.Model):
         return f"Title: {self.title} Author: {self.author} Id: {self.item_id} Status: {self.status}"
         
     def __repr__(self):
-        return f"{self.item_type}(id='{self.item_id}', title='{self.title}')"
+        return f"{self.type.capitalize()}(id='{self.item_id}', title='{self.title}')"
         
     def borrow_item(self) -> str:
         if self.status == ItemStatus.AVAILABLE:
             self.status = ItemStatus.LOANED
-            return f"The {self.item_type} {self.title} has been checked out"
+            return f"The {self.type.capitalize()} {self.title} has been checked out"
         return f"Error: {self.title} has currently {self.status}"
         
     def return_item(self) -> str:
         if self.status == ItemStatus.LOANED:
             self.status = ItemStatus.AVAILABLE
-            return f"The {self.item_type} {self.title} now is again available"
+            return f"The {self.type.capitalize()} {self.title} now is again available"
         return f"Error: {self.title} has currently {self.status}"
-        
-    @property
-    def item_type(self) -> str:
-        return self.__class__.__name__
 
 
 class Book(LibraryItem):
+    __tablename__ = "book"
+    item_id: Mapped[int] = mapped_column(db.ForeignKey("libraryitem.item_id"), primary_key=True)
     isbn: Mapped[str]
     pagnum: Mapped[int]
-    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
 
     __mapper_args__ = {
         "polymorphic_identity": "book",
@@ -58,8 +61,10 @@ class Book(LibraryItem):
         
         
 class Dvd(LibraryItem):
+    __tablename__ = "dvd"
+    item_id: Mapped[int] = mapped_column(db.ForeignKey("libraryitem.item_id"), primary_key=True)
     duration: Mapped[int]
-    user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
+    resolution: Mapped[VideoResolution] = mapped_column(SQLEnum(VideoResolution))
 
     __mapper_args__ = {
         "polymorphic_identity": "dvd",
