@@ -1,6 +1,6 @@
 from app import app
 from extension import db
-from models import Book, Dvd
+from models import Book, Dvd, VideoResolution
 
 def popola_database():
     print("⏳ Cancellazione vecchio database e creazione nuove tabelle...")
@@ -17,10 +17,10 @@ def popola_database():
     ]
     
     dvds = [
-        Dvd(title="Inception", author="Christopher Nolan", duration=148),
-        Dvd(title="Matrix", author="Lana & Lilly Wachowski", duration=136),
-        Dvd(title="Pulp Fiction", author="Quentin Tarantino", duration=154),
-        Dvd(title="Interstellar", author="Christopher Nolan", duration=169)
+        Dvd(title="Inception", author="Christopher Nolan", duration=148, resolution=VideoResolution.FOUR_K),
+        Dvd(title="Matrix", author="Lana & Lilly Wachowski", duration=136, resolution=VideoResolution.FHD),
+        Dvd(title="Pulp Fiction", author="Quentin Tarantino", duration=154, resolution=VideoResolution.HD),
+        Dvd(title="Interstellar", author="Christopher Nolan", duration=169, resolution=VideoResolution.FOUR_K)
     ]
     
     print("📥 Inserimento nel database in corso...")

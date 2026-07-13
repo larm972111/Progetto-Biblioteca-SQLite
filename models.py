@@ -9,6 +9,11 @@ class ItemStatus(Enum):
     AVAILABLE = 2
     UNAVAILABLE = 3
 
+class VideoResolution(Enum):
+    FOUR_K = "4K"
+    FHD = "FHD"
+    HD = "HD"
+
 class LibraryItem(db.Model):
     __tablename__ = "libraryitem"
     item_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -48,6 +53,8 @@ class LibraryItem(db.Model):
 
 
 class Book(LibraryItem):
+    __tablename__ = "book"
+    item_id: Mapped[int] = mapped_column(db.ForeignKey("libraryitem.item_id"), primary_key=True)
     isbn: Mapped[str]
     pagnum: Mapped[int]
 
@@ -58,7 +65,10 @@ class Book(LibraryItem):
         
         
 class Dvd(LibraryItem):
+    __tablename__ = "dvd"
+    item_id: Mapped[int] = mapped_column(db.ForeignKey("libraryitem.item_id"), primary_key=True)
     duration: Mapped[int]
+    resolution: Mapped[VideoResolution] = mapped_column(SQLEnum(VideoResolution))
 
     __mapper_args__ = {
         "polymorphic_identity": "dvd",
