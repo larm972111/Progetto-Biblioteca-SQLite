@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Enum as SQLEnum
 from extension import db
 
@@ -22,6 +22,7 @@ class LibraryItem(db.Model):
     author: Mapped[str]
     status: Mapped[ItemStatus]= mapped_column(SQLEnum(ItemStatus), default=ItemStatus.AVAILABLE)
     user_id: Mapped[Optional[int]] = mapped_column(db.ForeignKey('users.id'))
+    user: Mapped["User"] = relationship("User", back_populates="items")
 
     __mapper_args__ = {
         "polymorphic_on": "type",
@@ -73,9 +74,10 @@ class Dvd(LibraryItem):
     
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True)
+    items: Mapped[list["LibraryItem"]] = relationship("LibraryItem", back_populates="user")
 
     def __repr__(self):
         return f"<User {self.name}>"
