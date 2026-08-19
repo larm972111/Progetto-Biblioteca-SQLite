@@ -14,10 +14,9 @@
             <span class="text-xl font-bold tracking-wider text-amber-400 uppercase">Online Library</span>
         </div>
         <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
-            <a href="#" class="hover:text-amber-400 transition">HOME</a>
-            <a href="#" class="hover:text-amber-400 transition">MY LOANS</a>
-            <a href="#" class="hover:text-amber-400 transition text-amber-400">CATALOG</a>
-            <a href="#" class="hover:text-amber-400 transition">ADMIN</a>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
+                <a href="{{ url_for('list_users') }}" class="text-amber-400 font-bold transition">GESTIONE UTENTI</a>
+            </nav>
         </div>
     </nav>
 
