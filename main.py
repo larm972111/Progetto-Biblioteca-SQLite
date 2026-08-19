@@ -4,8 +4,8 @@ from models import Book, Dvd, VideoResolution
 
 def popola_database():
     print("⏳ Cancellazione vecchio database e creazione nuove tabelle...")
-    db.drop_all()   # Cancello tutto così non ho problemi di record duplicati se lo lancio più volte
-    db.create_all() # Ricreo le tabelle pulite
+    db.drop_all()   
+    db.create_all()
     
     print("📚 Creazione degli elementi di test...")
     
@@ -24,16 +24,12 @@ def popola_database():
     ]
     
     print("📥 Inserimento nel database in corso...")
-    # Aggiungo tutte le istanze alla sessione di SQLAlchemy
     db.session.add_all(libri)
     db.session.add_all(dvds)
     
-    # Sparo i dati fisicamente nel file .db con il commit
     db.session.commit()
     print("✅ Database popolato con successo!")
 
 if __name__ == "__main__":
-    # Cruciale: Bisogna dire a Python di usare il "contesto" dell'app Flask,
-    # altrimenti SQLAlchemy non sa a quale file .db collegarsi.
     with app.app_context():
         popola_database()
