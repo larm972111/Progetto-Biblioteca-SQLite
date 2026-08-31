@@ -14,13 +14,34 @@
             <span class="text-xl font-bold tracking-wider text-amber-400 uppercase">Online Library</span>
         </div>
         <div class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
-            <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-300">
                 <a href="{{ url_for('list_users') }}" class="text-amber-400 font-bold transition">GESTIONE UTENTI</a>
-            </nav>
+                <a href="{{ url_for('register') }}" class="text-amber-400 font-bold transition">REGISTRATI</a>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-banner" class="space-y-4">
+            {% for category, message in messages %}
+                <div class="p-4 rounded-xl text-sm font-semibold border flex items-center space-x-3 shadow-lg 
+                {% if category == 'success' %}
+                    bg-emerald-900/40 text-emerald-300 border-emerald-500/40
+                {% elif category == 'error' or category == 'danger' %}
+                    bg-rose-900/40 text-rose-300 border-rose-500/40
+                {% else %}
+                    bg-amber-900/40 text-amber-300 border-amber-500/40
+                {% endif %}">
+                <span>
+                    {% if category == 'success' %}✅{% else %}⚠️{% endif %}
+                </span>
+                <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
 
         <section class="bg-gray-800 rounded-xl shadow-2xl border border-gray-700 overflow-hidden">
             <div class="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4 flex items-center space-x-2">
@@ -108,6 +129,11 @@
         </section>
 
     </main>
-
+    <script>
+      setTimeout(() => {
+        const banner = document.getElementById('flash-banner');
+        if (banner) banner.remove();
+      }, 3500);
+    </script>
 </body>
 </html>
